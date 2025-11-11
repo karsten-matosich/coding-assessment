@@ -18,7 +18,10 @@ In /back-end please run:
   docker build -t my-api-image .
   docker run -d --name backend-container -p 5001:80 -v karsten-assessment-db-data:/data my-api-image
 
-Unit tests can be run in /back-end/KarstenAssessmentApi.Tests by running:
+
+.NET SDK is required to run unit tests. If it is not already installed on your machine, you can download it here: https://dotnet.microsoft.com/download
+
+To run unit tests, in /back-end/KarstenAssessmentApi.Tests please run: 
   dotnet test
 
 
