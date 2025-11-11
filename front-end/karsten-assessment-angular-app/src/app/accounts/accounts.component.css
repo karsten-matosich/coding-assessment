@@ -1,0 +1,171 @@
+.accounts-container {
+  padding: 24px;
+  margin: 16px;
+  border: 1px solid #60c0ee;
+  border-radius: 8px;
+}
+
+.accounts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.accounts-title {
+  color: rgb(75, 75, 75);
+  margin: 0;
+}
+
+.btn-add-account {
+  background-color: #60c0ee;
+  color: white;
+  border: 1px solid #4a9bc7;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-add-account:hover {
+  background-color: #4a9bc7;
+}
+
+.account-form {
+  margin-bottom: 16px;
+}
+
+.form-fields {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  color: rgb(75, 75, 75);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.form-field input {
+  padding: 8px;
+  border: 1px solid #cdcdcd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #60c0ee;
+}
+
+.form-field input[readonly] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  background-color: white;
+  color: rgb(75, 75, 75);
+  border: 1px solid rgb(75, 75, 75);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-create {
+  background-color: #60c0ee;
+  color: white;
+  border: 1px solid #4a9bc7;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-create:hover:not(:disabled) {
+  background-color: #4a9bc7;
+}
+
+.btn-create:disabled {
+  background-color: #cccccc;
+  color: #888888;
+  border-color: #aaaaaa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.accounts-table {
+  margin-top: 16px;
+  width: 100%;
+  border-spacing: 0px; 
+  border-top: 1px solid #cdcdcd;
+  border-left: 1px solid #cdcdcd;
+}
+
+.accounts-table th {
+  background-color: #f9f9f9;
+  padding: 8px;
+  text-align: left;
+  color: rgb(75, 75, 75);
+  border-bottom: 1px solid #cdcdcd;
+  border-right: 1px solid #cdcdcd;
+}
+
+.accounts-table td {
+  padding: 8px;
+  text-align: left;
+  border-right: 1px solid #cdcdcd;
+  border-bottom: 1px solid #cdcdcd;
+}
+
+.accounts-table td.negative-balance {
+  background-color: #ffc4c4;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: rgb(75, 75, 75);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action:hover {
+  color: #60c0ee;
+}
+
+.btn-action i {
+  font-size: 16px;
+}

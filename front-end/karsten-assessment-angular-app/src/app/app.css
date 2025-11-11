@@ -1,0 +1,39 @@
+.top-bar {
+  height: 64px;
+  width: 100%;
+  background-color: rgb(249, 249, 249);
+  margin: 0;
+  padding: 13px 32px;
+  font-size: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-bar {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.nav-bar a {
+  text-decoration: none;
+  color: rgb(58, 58, 58);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.nav-bar a:hover {
+  color: rgb(100, 100, 100);
+}
+
+.nav-bar a.active {
+  color: rgb(96, 192, 238);
+  font-weight: 600;
+}

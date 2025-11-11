@@ -1,0 +1,99 @@
+<div class="transaction-uploads-container">
+  <div class="transaction-uploads-header" (click)="toggleExpanded()">
+    <h2 class="transaction-uploads-title">Transaction Uploads</h2>
+    <i [class.fa-chevron-up]="isExpanded" [class.fa-chevron-down]="!isExpanded" class="fas"></i>
+  </div>
+  @if (isExpanded) {
+    <table class="transaction-uploads-table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Upload Date</th>
+          <th>File Name</th>
+          <th>File Size</th>
+          <th>Incoming Transaction Count</th>
+          <th>Outgoing Transaction Count</th>
+          <th>Status</th>
+          <th class="error-message-header">Error Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (upload of transactionUploads; track upload.id) {
+          <tr>
+            <td>{{ upload.id }}</td>
+            <td>{{ formatDate(upload.upload_date) }}</td>
+            <td>{{ upload.file_name }}</td>
+            <td>{{ formatFileSize(upload.file_size) }}</td>
+            <td>{{ upload.incoming_transaction_count }}</td>
+            <td>{{ upload.outgoing_transaction_count }}</td>
+            <td>{{ upload.status }}</td>
+            <td class="error-message-cell">{{ upload.error_message ?? '' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
+
+<div class="failed-uploads-container">
+  <div class="failed-uploads-header" (click)="toggleFailedUploads()">
+    <h2 class="failed-uploads-title">Failed Uploads</h2>
+    <i [class.fa-chevron-up]="isFailedUploadsExpanded" [class.fa-chevron-down]="!isFailedUploadsExpanded" class="fas"></i>
+  </div>
+  @if (isFailedUploadsExpanded) {
+    <div class="pagination-controls-top">
+      <div class="page-size-selector">
+        <label for="failedImportsPageSize">Items per page:</label>
+        <select id="failedImportsPageSize" [(ngModel)]="failedImportsPageSize" (change)="onFailedImportsPageSizeChange()">
+          @for (size of PAGE_SIZE_OPTIONS; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <table class="failed-uploads-table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Transaction Upload Id</th>
+          <th>External Transaction Id</th>
+          <th class="csv-row-header">CSV Row Value</th>
+          <th>Error Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (failed of paginatedFailedImports; track failed.id) {
+          <tr>
+            <td>{{ failed.id }}</td>
+            <td>{{ failed.transaction_upload_id }}</td>
+            <td>{{ failed.external_transaction_id }}</td>
+            <td class="csv-row-cell">{{ failed.csv_row_value }}</td>
+            <td>{{ failed.error_message }}</td>
+          </tr>
+        }
+        @if (failedImports.length === 0) {
+          <tr>
+            <td colspan="5" class="no-failed-imports">No failed imports</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="pagination-controls-bottom">
+      <div class="pagination-info">
+        Showing {{ (failedImportsCurrentPage - 1) * failedImportsPageSize + 1 }} to {{ Math.min(failedImportsCurrentPage * failedImportsPageSize, failedImports.length) }} of {{ failedImports.length }} failed imports
+      </div>
+      <div class="pagination-buttons">
+        <button class="pagination-btn" [disabled]="failedImportsCurrentPage === 1" (click)="previousFailedImportsPage()">Previous</button>
+        @for (page of getFailedImportsPageNumbers(); track page) {
+          <button 
+            class="pagination-btn" 
+            [class.active]="page === failedImportsCurrentPage"
+            (click)="goToFailedImportsPage(page)">
+            {{ page }}
+          </button>
+        }
+        <button class="pagination-btn" [disabled]="failedImportsCurrentPage === failedImportsTotalPages" (click)="nextFailedImportsPage()">Next</button>
+      </div>
+    </div>
+  }
+</div>

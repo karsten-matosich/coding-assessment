@@ -1,0 +1,131 @@
+  <div class="transactions-container">
+    <div class="transactions-header">
+      <h2 class="transactions-title" (click)="toggleTransactionsSection()">Transactions</h2>
+      <div class="transactions-header-right">
+        <div class="transactions-header-actions" [class.hidden]="!isTransactionsExpanded">
+          <button class="csv-btn" (click)="downloadSampleCsv(); $event.stopPropagation()">Download Sample CSV</button>
+          <button class="csv-btn" (click)="uploadTransactions(); $event.stopPropagation()">Upload Transactions</button>
+          <button class="csv-btn" (click)="uploadGoldenCSV(); $event.stopPropagation()">Upload Comparison CSV</button>
+          <input #fileInput type="file" accept=".csv" style="display: none;" (change)="onFileSelected($event)" />
+        </div>
+        <i [class.fa-chevron-up]="isTransactionsExpanded" [class.fa-chevron-down]="!isTransactionsExpanded" class="fas" (click)="toggleTransactionsSection()"></i>
+      </div>
+    </div>
+    @if (isTransactionsExpanded) {
+      <div class="pagination-controls-top">
+        <div class="page-size-selector">
+          <label for="pageSize">Items per page:</label>
+          <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            @for (size of PAGE_SIZE_OPTIONS; track size) {
+              <option [value]="size">{{ size }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Transaction Date</th>
+            <th>Account</th>
+            <th>External Transaction Id</th>
+            <th>Direction</th>
+            <th>Amount</th>
+            <th>Transaction Upload Id</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of paginatedTransactions; track transaction.id) {
+            <tr>
+              <td>{{ formatDate(transaction.transaction_date) }}</td>
+              <td>{{ getAccountName(transaction.account_id) }}</td>
+              <td>{{ transaction.external_transaction_id ?? '' }}</td>
+              <td>{{ transaction.direction }}</td>
+              <td [class]="getAmountClass(transaction.direction)">{{ formatTransactionAmount(transaction.amount, transaction.direction) }}</td>
+              <td>{{ transaction.transaction_upload_id ?? '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="pagination-controls-bottom">
+        <div class="pagination-info">
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, transactions.length) }} of {{ transactions.length }} transactions
+        </div>
+        <div class="pagination-buttons">
+          <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+          @for (page of getPageNumbers(); track page) {
+            <button 
+              class="pagination-btn" 
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+          <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+        </div>
+      </div>
+    }
+</div>
+
+@if (dataComparisonResults.length > 0) {
+  <div class="transactions-container">
+    <div class="transactions-header" (click)="toggleComparisonResultsSection()">
+      <h2 class="transactions-title">Data Comparison Results</h2>
+      <i [class.fa-chevron-up]="isComparisonResultsExpanded" [class.fa-chevron-down]="!isComparisonResultsExpanded" class="fas"></i>
+    </div>
+    @if (isComparisonResultsExpanded) {
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Transaction Date</th>
+            <th>Account</th>
+            <th>External Transaction Id</th>
+            <th>Direction</th>
+            <th>Amount</th>
+            <th>Perfect Match</th>
+            <th>Matching Transaction Id</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (result of dataComparisonResults; track $index) {
+            <tr [class.no-matches-warning]="!result.perfect_match || result.matching_transaction_id.length >= 2">
+              <td>{{ formatDate(result.transaction_date) }}</td>
+              <td>{{ result.account }}</td>
+              <td>{{ result.external_transaction_id }}</td>
+              <td>{{ normalizeDirectionForDisplay(result.direction) }}</td>
+              <td>{{ formatComparisonAmountWithDirection(result.amount, result.direction) }}</td>
+              <td>{{ result.perfect_match ? 'True' : 'False' }}</td>
+              <td>{{ result.matching_transaction_id.length > 0 ? result.matching_transaction_id.join(', ') : 'None' }}</td>
+            </tr>
+            @if (result.near_matches && result.near_matches.length > 0) {
+              @for (nearMatch of result.near_matches; track nearMatch.id) {
+                <tr class="near-match-row">
+                  <td [class.match]="checkColumnMatch('transaction_date', result, nearMatch)" 
+                      [class.no-match]="!checkColumnMatch('transaction_date', result, nearMatch)">
+                    {{ formatDate(nearMatch.transaction_date) }}
+                  </td>
+                  <td [class.match]="checkColumnMatch('account', result, nearMatch)" 
+                      [class.no-match]="!checkColumnMatch('account', result, nearMatch)">
+                    {{ getAccountNameFromId(nearMatch.account_id) }}
+                  </td>
+                  <td [class.match]="checkColumnMatch('external_transaction_id', result, nearMatch)" 
+                      [class.no-match]="!checkColumnMatch('external_transaction_id', result, nearMatch)">
+                    {{ nearMatch.external_transaction_id ?? '' }}
+                  </td>
+                  <td [class.match]="checkColumnMatch('direction', result, nearMatch)" 
+                      [class.no-match]="!checkColumnMatch('direction', result, nearMatch)">
+                    {{ nearMatch.direction }}
+                  </td>
+                  <td [class.match]="checkColumnMatch('amount', result, nearMatch)" 
+                      [class.no-match]="!checkColumnMatch('amount', result, nearMatch)">
+                    {{ formatTransactionAmount(nearMatch.amount, nearMatch.direction) }}
+                  </td>
+                  <td colspan="2"></td>
+                </tr>
+              }
+            }
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}

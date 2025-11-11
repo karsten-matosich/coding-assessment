@@ -1,0 +1,54 @@
+<div class="accounts-container">
+  <div class="accounts-header">
+    <h2 class="accounts-title">Accounts</h2>
+    @if (!showAccountForm) {
+      <button class="btn-add-account" (click)="openAccountForm()">Add New Account</button>
+    }
+  </div>
+
+  @if (showAccountForm) {
+    <div class="account-form">
+      <div class="form-fields">
+        <div class="form-field">
+          <label for="account-name">Name</label>
+          <input type="text" id="account-name" [(ngModel)]="newAccountName" />
+        </div>
+        <div class="form-field">
+          <label for="account-number">Account Number</label>
+          <input type="text" id="account-number" [(ngModel)]="newAccountNumber" />
+        </div>
+      </div>
+      <div class="form-buttons">
+        <button class="btn-cancel" (click)="cancelAccount()">Cancel</button>
+        <button class="btn-create" (click)="saveAccount()" [disabled]="!isFormValid()">{{ isEditMode ? 'Update' : 'Create' }}</button>
+      </div>
+    </div>
+  }
+
+  <table class="accounts-table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Account Number</th>
+        <th>Balance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (account of accounts; track account.id) {
+        <tr>
+          <td>{{ account.id }}</td>
+          <td>{{ account.name }}</td>
+          <td>{{ account.account_number }}</td>
+          <td [class.negative-balance]="isNegative(account.balance)">{{ formatCurrency(account.balance) }}</td>
+          <td class="actions-cell">
+            <button class="btn-action" (click)="editAccount(account)" title="Edit Account">
+              <i class="fas fa-pen-to-square"></i>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
